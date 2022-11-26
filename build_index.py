@@ -139,8 +139,6 @@ def generateTweetVectors(tweetTFDicts, idfDict, termIndexDict):
     start = time.time()
     tweetVectors = sp.dok_matrix((tweetCount, termCount), dtype="float64")
 
-
-    #TODO: speed this up - maybe use pandarallel library to parallelize
     def populateVector(tweetTerms):
         global rowIndex
         for term, tfWeight in tweetTerms.items():
@@ -152,6 +150,16 @@ def generateTweetVectors(tweetTFDicts, idfDict, termIndexDict):
     print(f"Took {time.time()-start} seconds.\n")
 
     return tweetVectors
+
+
+def generateUnweightedTF():
+    tweets = loadTokenized()
+    tweets["tf"] = calcUnweightedTF(tweets["preprocessed_text"])
+    print("Saving to CSV...")
+    start = time.time()
+    tweets.to_csv(OUTPUT_PATH+"tweetsWithTFScores.csv", encoding="utf-8", index=False)
+    print(f"Took {time.time()-start} seconds.\n")
+    return tweets
 
 
 
@@ -187,7 +195,6 @@ def generateAllStructures():
     print(f"Took {time.time()-start} seconds.\n")
 
     return tweets, idfScores, termIndexDict, tweetVectors
-
 
 
 
