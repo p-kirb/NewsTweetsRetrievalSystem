@@ -1,3 +1,6 @@
+#lucene index
+lucene_system/lucene_index/
+
 # Data folders
 data/
 
