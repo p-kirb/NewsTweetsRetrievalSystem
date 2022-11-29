@@ -212,7 +212,10 @@ def remove_duplicate_tweets(data_path, dupliacte_col, overwrite=False):
 
     data = pd.read_csv(data_path, low_memory=False)
     print('Data shape before removing duplicates: {}'.format(data.shape))
-    data.drop_duplicates(subset=[dupliacte_col], inplace=True)
+    # remove urls from tweet text so that duplicates are based on the tweet text only
+    data['duplicate'] = data[dupliacte_col].apply(lambda x: remove_urls(x))
+    data.drop_duplicates(subset=['duplicate'], inplace=True)
+    data.drop(columns=['duplicate'], inplace=True)
     data.reset_index(drop=True, inplace=True)
     print('Data shape after removing duplicates: {}'.format(data.shape))
 
