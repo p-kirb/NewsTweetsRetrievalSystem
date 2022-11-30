@@ -1,30 +1,52 @@
 import sys, lucene, os
 import time
 import pandas as pd
-
 import traceback
+from nltk.corpus import stopwords
+
+sys.path.append("../data_preprocessing")    #adding path at runtime to allow use of preprocessing functions
+from helpers import remove_duplicate_tweets
 
 
 from java.io import StringReader
 from java.nio.file import Path, Paths
 from org.apache.lucene.document import Document, Field, StoredField, StringField, TextField
 from org.apache.lucene.index import IndexWriter, IndexWriterConfig
+from org.apache.lucene.analysis import CharArraySet
 from org.apache.lucene.analysis.standard import StandardTokenizer
 from org.apache.lucene.analysis.standard import StandardAnalyzer
 from org.apache.lucene.analysis.miscellaneous import LimitTokenCountAnalyzer
 from org.apache.lucene.store import FSDirectory
 
 
-def loadCorpus():
-    print("Reading CSVs...")
-    start = time.time()
-    bbcDataFrame = pd.read_csv("../data/input_data/tweets_bbc.csv", usecols=["id", "tweet"])
-    cnnDataFrame = pd.read_csv("../data/input_data/tweets_cnn.csv", usecols=["id", "tweet"])
-    ecoDataFrame = pd.read_csv("../data/input_data/tweets_eco.csv", usecols=["id", "tweet"])
-    print(f"Took {time.time()-start} seconds.\n")
+JOINED_DATA_PATH = "../data/joined_data/joined_data.csv"
+DUPLICATE_COL = 'tweet'
 
-    frames = [bbcDataFrame, cnnDataFrame, ecoDataFrame]
-    return pd.concat(frames)
+def loadCorpus():
+    print("Reading CSVs, removing duplicates...")
+    start = time.time()
+    dataFrame = remove_duplicate_tweets(JOINED_DATA_PATH, DUPLICATE_COL)
+
+
+    print(f"Took {time.time()-start} seconds.\n")
+    return dataFrame[["id","tweet"]]
+
+
+def getStopwords():
+    '''
+        function needed as cannot directly cast from python list to Java collection
+        so instead, iteratively builds the collection.
+        Using the NLTK set of stopwords with the StandardAnalyzer yields better results
+        than using the Lucene EnglishAnalyzer. (e.g. query of "it" will return empty set
+        when using the NLTK set)
+    '''
+    pythonSet = stopwords.words("english")
+    javaSet = CharArraySet(len(pythonSet), True)
+    for word in pythonSet:
+        javaSet.add(word)
+
+    return javaSet
+    
 
 
 def getDoc(id, tweet):
@@ -34,8 +56,11 @@ def getDoc(id, tweet):
 
     return doc
 
-def indexSingleLine(line, w):      #function used to exploit the pandas.agg functionality
-    #takes in a row, creates new document object, and adds it to writer.
+def indexSingleLine(line, w):
+    '''
+        function used to exploit the pandas.agg functionality
+        takes in a row, creates new document object, and adds it to writer.
+    '''
     document = getDoc(line["id"], line["tweet"])
     w.addDocument(document)
 
@@ -45,7 +70,8 @@ def indexCorpus(corpus):
     start = time.time()
     dirPath = Paths.get("./lucene_index")
     directory = FSDirectory.open(dirPath)
-    analyzer = StandardAnalyzer()                   #do stopword removal etc. here (can also use different types of analysers) - https://lucene.apache.org/core/9_0_0/core/org/apache/lucene/analysis/standard/StandardAnalyzer.html
+    stopwordSet = getStopwords()
+    analyzer = StandardAnalyzer(stopwordSet)
     config = IndexWriterConfig(analyzer)
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND)
 

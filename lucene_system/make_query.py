@@ -12,14 +12,20 @@ from org.apache.lucene.search import IndexSearcher, TopDocs, ScoreDoc
 if __name__ == '__main__':
     lucene.initVM(vmargs=['-Djava.awt.headless=true'])
 
+    query = ""
+    if len(sys.argv) == 1:
+        print("usage: make_query.py '<query string>'")
+        print("exiting")
+        sys.exit()
+    query = sys.argv[1]
 
     dirPath = Paths.get("./lucene_index")
     directory = FSDirectory.open(dirPath)
-    analyzer = StandardAnalyzer()                   #do stopword removal etc. here (can also use different types of analysers) - https://lucene.apache.org/core/9_0_0/core/org/apache/lucene/analysis/standard/StandardAnalyzer.html
-
+    analyzer = StandardAnalyzer()                   
+    
     try:
         searcher = IndexSearcher(DirectoryReader.open(directory))
-        query = QueryParser("content", analyzer).parse("boomer")
+        query = QueryParser("content", analyzer).parse(query)
         topDocs = searcher.search(query, 50)
         for result in topDocs.scoreDocs:
             ranking = result.score
@@ -32,3 +38,5 @@ if __name__ == '__main__':
     except Exception as e:
         print(e)
         print("there was an error")
+
+    print("exiting")
