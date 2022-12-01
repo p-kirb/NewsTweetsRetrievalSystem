@@ -11,12 +11,13 @@ from java.nio.file import Paths
 from org.apache.lucene.document import Document, Field, StringField, TextField
 from org.apache.lucene.index import IndexWriter, IndexWriterConfig
 from org.apache.lucene.analysis import CharArraySet
-from org.apache.lucene.analysis.standard import StandardAnalyzer
+from org.apache.lucene.analysis.en import EnglishAnalyzer
 from org.apache.lucene.store import FSDirectory
 
 
 JOINED_DATA_PATH = "../data/joined_data/joined_data.csv"
 DUPLICATE_COL = 'tweet'
+
 
 def loadCorpus():
     '''
@@ -38,7 +39,7 @@ def loadCorpus():
 def _getStopwords():
     '''
     Function needed as cannot make a direct cast from python list to Java collection so this function iteratively builds the collection instead.
-    Using the NLTK set of stopwords with the StandardAnalyzer yields better results than using the Lucene EnglishAnalyzer.
+    Using the NLTK set of stopwords yields better results than using the standard Lucene EnglishAnalyzer stopwords set.
     (e.g. query of "it" will return empty set when using the NLTK set)
 
             Returns:
@@ -95,7 +96,7 @@ def indexCorpus(corpus):
                 corpus (pandas.DataFrame): Dataframe containing "id" and "tweet" columns corresponding to unique ID of a tweet, and the tweet itself respectively.
     '''
 
-    print("Creating corpus...")
+    print("Creating corpus index...")
     indexDirName = "./lucene_index"
     start = time.time()
     if not os.path.exists("./lucene_index"):
@@ -104,7 +105,7 @@ def indexCorpus(corpus):
     dirPath = Paths.get(indexDirName)
     directory = FSDirectory.open(dirPath)
     stopwordSet = _getStopwords()
-    analyzer = StandardAnalyzer(stopwordSet)
+    analyzer = EnglishAnalyzer(stopwordSet)
     config = IndexWriterConfig(analyzer)
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND)
 

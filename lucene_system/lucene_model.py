@@ -2,7 +2,7 @@ import sys, os, lucene
 import pandas as pd
 
 from java.nio.file import Paths
-from org.apache.lucene.analysis.standard import StandardAnalyzer
+from org.apache.lucene.analysis.en import EnglishAnalyzer
 from org.apache.lucene.index import DirectoryReader
 from org.apache.lucene.queryparser.classic import QueryParser
 from org.apache.lucene.store import FSDirectory
@@ -26,7 +26,7 @@ def lucene_query(queryString, noOfResults, printResults=False):
 
     dirPath = Paths.get("./lucene_index")
     directory = FSDirectory.open(dirPath)
-    analyzer = StandardAnalyzer()                   #removal of stopwords in query is unneccesary as they are not indexed.
+    analyzer = EnglishAnalyzer()                   #removal of stopwords in query is unneccesary as they are not indexed.
     
     resultsList = []
 
