@@ -2,8 +2,6 @@ import sys, lucene, os
 import time
 import traceback
 from nltk.corpus import stopwords
-
-sys.path.append("../data_preprocessing")    #adding path at runtime to allow use of preprocessing functions
 from helpers import remove_duplicate_tweets
 
 
@@ -16,6 +14,7 @@ from org.apache.lucene.store import FSDirectory
 
 
 JOINED_DATA_PATH = "../data/joined_data/joined_data.csv"
+LUCENE_PREPROCESSED_DATA_PATH = "../data/lucene_preprocessed_data/"
 DUPLICATE_COL = 'tweet'
 
 
@@ -97,10 +96,10 @@ def indexCorpus(corpus):
     '''
 
     print("Creating corpus index...")
-    indexDirName = "./lucene_index"
+    indexDirName = LUCENE_PREPROCESSED_DATA_PATH
     start = time.time()
-    if not os.path.exists("./lucene_index"):
-        os.makedirs("./lucene_index")
+    if not os.path.exists(LUCENE_PREPROCESSED_DATA_PATH):
+        os.makedirs(LUCENE_PREPROCESSED_DATA_PATH)
 
     dirPath = Paths.get(indexDirName)
     directory = FSDirectory.open(dirPath)
