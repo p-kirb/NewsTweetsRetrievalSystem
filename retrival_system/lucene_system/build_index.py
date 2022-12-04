@@ -14,7 +14,7 @@ from org.apache.lucene.store import FSDirectory
 
 
 JOINED_DATA_PATH = "../data/joined_data/joined_data.csv"
-LUCENE_PREPROCESSED_DATA_PATH = "../data/lucene_preprocessed_data/"
+LUCENE_PREPROCESSED_DATA_PATH = "./lucene_index"
 DUPLICATE_COL = 'tweet'
 
 
