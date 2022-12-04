@@ -1,3 +1,5 @@
+# web_app model compoments
+model_components/
 #lucene index
 lucene_system/lucene_index/
 
