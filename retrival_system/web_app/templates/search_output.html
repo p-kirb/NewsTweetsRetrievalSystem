@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Search Page{% endblock %}
+
+{% block content %}
+{% for result in results %}
+<blockquote class="twitter-tweet" data-lang="en" align="center">
+    <p lang="en" dir="ltr">xdddjust setting up my twttr</p>&mdash; Jack (@jack) <a
+        href="https://twitter.com/POTUS/status/{{result}}">March 21, 2006</a>
+</blockquote>
+{% endfor %}
+{% endblock %}

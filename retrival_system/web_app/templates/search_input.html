@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Search Page{% endblock %}
+
+{% block content %}
+
+<h1>Search Engine</h1>
+
+<form action="" method="post">
+	<p>Please enter the query: </p>
+	<p><input type="text" name="query" /></p>
+
+    <p>Please check the search model: </p>
+    <p><input type="radio" name="model" value="vsm" checked> VSM</p>
+    <p><input type="radio" name="model" value="bm25"> BM25</p>
+    <p><input type="radio" name="model" value="mixture"> Mixture</p>
+
+    <p>Please type number of results to show</p>
+    <p><input type="number" name="n" value=5 min="5" max="50"></p>
+
+    <p><input type="submit" value="Search" /></p>
+</form>
+
+{% endblock %}
