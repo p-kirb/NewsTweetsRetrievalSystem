@@ -43,7 +43,7 @@ def vector_space_model(query_tokenized, tweetVectors, idf_dict, term_id, allTwee
     return results
 
 # BESTMATCH25 ALGORITHM
-def BM25(query_terms, factors_matrix, idf_dict, term_id, allTweets, k_3 = 1.5, N = 10):
+def BM25(query_tokenized, factors_matrix, idf_dict, term_id, allTweets, k_3 = 1.5, N = 10):
 
     """
     Aims to calculate RSV values for each document. Then chooses top ranked documents. The formula depends on the length of the query.
@@ -59,25 +59,25 @@ def BM25(query_terms, factors_matrix, idf_dict, term_id, allTweets, k_3 = 1.5, N
                 
     """
 
-    query_tf = dict(map(lambda token : (token, query_terms.count(token)), query_terms))
+    query_tf = dict(map(lambda token : (token, query_tokenized.count(token)), query_tokenized))
     query_unique_terms  = query_tf.keys()
     query_idfs = []
-    query_terms_id = []
+    query_tokenized_id = []
 
     for term in query_unique_terms:
         if term in idf_dict.keys():
             query_idfs.append(idf_dict[term])
-            query_terms_id.append(term_id[term])
+            query_tokenized_id.append(term_id[term])
 
-    if len(query_terms) <= 6:
-        output = np.dot(factors_matrix[:,query_terms_id].toarray(), query_idfs)
+    if len(query_tokenized) <= 6:
+        output = np.dot(factors_matrix[:,query_tokenized_id].toarray(), query_idfs)
         doc_id = np.argsort(-output)[0:N]
 
     else:
         nominator = (k_3+1) * np.array(list(query_tf.values()))
         denominator = k_3 + np.array(list(query_tf.values()))
         query_factor = np.array([x/y for x,y in zip(nominator, denominator)])
-        output = np.dot(factors_matrix[:,query_terms_id].toarray(),np.multiply(query_idfs, query_factor))
+        output = np.dot(factors_matrix[:,query_tokenized_id].toarray(),np.multiply(query_idfs, query_factor))
         doc_id = np.argsort(-output)[0:N]
 
     results = allTweets["id"][doc_id]
@@ -85,7 +85,7 @@ def BM25(query_terms, factors_matrix, idf_dict, term_id, allTweets, k_3 = 1.5, N
     return results
 
 # MIXTURE MODEL
-def mixture_model(query_terms, parameter_matrix, term_id, allTweets, cf, lam=0.5, N=10):
+def mixture_model(query_tokenized, parameter_matrix, term_id, allTweets, cf, lam=0.5, N=10):
 
     """
         Aims to estimate probability of the query occuring in each document documents. Then algorithm selects top ranked documents.
@@ -101,20 +101,20 @@ def mixture_model(query_terms, parameter_matrix, term_id, allTweets, cf, lam=0.5
                 
     """
 
-    query_tf = dict(map(lambda token : (token, query_terms.count(token)), query_terms))
+    query_tf = dict(map(lambda token : (token, query_tokenized.count(token)), query_tokenized))
     query_unique_terms  = query_tf.keys()
 
-    query_terms_id = []
+    query_tokenized_id = []
     query_cf = []
     for term in query_unique_terms:
         if term in term_id.keys():
             query_cf.append(cf[term])
-            query_terms_id.append(term_id[term])
+            query_tokenized_id.append(term_id[term])
 
-    query_terms_id = np.array(query_terms_id)
+    query_tokenized_id = np.array(query_tokenized_id)
     query_cf = np.array(query_cf)
 
-    values = lam * parameter_matrix[:, query_terms_id].toarray() + (1-lam) * query_cf/sum(cf.values())
+    values = lam * parameter_matrix[:, query_tokenized_id].toarray() + (1-lam) * query_cf/sum(cf.values())
     doc_id = np.argsort(-np.multiply.reduce(values, axis=1))[0:N]
     
     results = allTweets["id"][doc_id]
