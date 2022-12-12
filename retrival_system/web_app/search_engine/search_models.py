@@ -6,7 +6,7 @@ from numpy.linalg import norm
 from sklearn.preprocessing import normalize
 
 
-TWEETS_DATAFRAME_PATH = "search_engine/processed_data.csv"
+TWEETS_DATAFRAME_PATH = "search_engine/model_components/processed_data.csv"
 INPUT_PATH = "search_engine/model_components/"
 
 
@@ -40,8 +40,8 @@ def vector_space_model(query_tokenized, tweetVectors, idf_dict, term_id, allTwee
     doc_id = np.argsort(-cosine_similarity)[0:N]
     results = allTweets["id"][doc_id]
 
-    return results
-
+    return results, query_tf_idf
+    
 # BESTMATCH25 ALGORITHM
 def BM25(query_tokenized, factors_matrix, idf_dict, term_id, allTweets, k_3 = 1.5, N = 10):
 
@@ -85,7 +85,7 @@ def BM25(query_tokenized, factors_matrix, idf_dict, term_id, allTweets, k_3 = 1.
     return results
 
 # MIXTURE MODEL
-def mixture_model(query_tokenized, parameter_matrix, term_id, allTweets, cf, lam=0.5, N=10):
+def mixture_model(query_tokenized, parameter_matrix, term_id, allTweets, cf, lam=0.6, N=10):
 
     """
         Aims to estimate probability of the query occuring in each document documents. Then algorithm selects top ranked documents.
