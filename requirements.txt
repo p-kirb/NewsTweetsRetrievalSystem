@@ -1,6 +1,0 @@
-PyLucene (installation instructions at https://lucene.apache.org/pylucene/install.html):
-  Make
-  JCC (installation instructions at https://lucene.apache.org/pylucene/jcc/install.html)
-  Temurin JDK (version 11 or higher)
-  NLTK
-    Stopwords corpus
