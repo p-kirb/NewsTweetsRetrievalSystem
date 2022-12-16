@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Search Page{% endblock %}
+
+{% block content %}
+
+<script>
+    function rocchio() {
+        document.getElementById('rocchio-form').submit();
+    }
+</script>
+
+<h1 style="margin-left: 0.5em">Search Engine</h1>
+
+<div style="display: flex; margin-left: 1em;">
+    <div>
+        <form name="search-engine" action="/search-engine" method="post">
+            <b>Please enter the query: </b>
+            <p><input type="text" name="query" value='{{query}}' /></p>
+
+            <b>Please check the search model: </b>
+            <p><input type="radio" name="model" value="vsm" {% if model=="vsm" %}
+                    checked="True" {% endif %}> Vector Space Model</p>
+            <p><input type="radio" name="model" value="bm25" {% if model=='bm25' %}
+                    checked="True" {% endif %}> OKAPI BM25</p>
+            <p><input type="radio" name="model" value="mixture" {% if model=='mixture' %} 
+                    checked="True" {% endif %}> Language Based Model</p>
+            <p><input type="radio" name="model" value="lucene" {% if model=='lucene' %} 
+                    checked="True" {% endif %}> Lucene Model</p>
+
+            <b>Please enter number of results to show</b>
+            <p><input type="number" name="n" value={{n}} min="5" max="50"></p>
+
+            <p><input type="submit" value="Search" class="search"/></p>
+        </form>
+
+        {% if model == 'vsm' %}
+        <button id="rocchio-btn" onclick="rocchio()" style="font-weight:bold">Update Query</button>
+        {% endif %}
+    </div>
+
+    <div style="flex: 1; margin-left: 1em;" id="search-results">
+        <form id="rocchio-form" action="/rocchio" method="post">
+            <input type="hidden" name="query" value='{{query}}' />
+            <input type="hidden" name="model" value='{{model}}' />
+            <input type="hidden" name="n" value='{{n}}' />
+
+            {% for result in results %}
+            <div style="display: flex; align-items: center; justify-content: center; text-align: center;">
+                <blockquote class="twitter-tweet" data-lang="en">
+                    <p lang="en" dir="ltr">LOADING...</p>
+                    <a href="https://twitter.com/twitter/status/{{result}}"></a>
+                </blockquote>
+                {% if model == 'vsm' %}
+                <div style="margin-left: 1em;">
+                    <input type="checkbox" name="relevant" value="{{result}}">
+                    <label for="relevant">Relevant</label>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+</div>
+<a href="#" class="top">Scroll Up</a>
+{% endblock %}

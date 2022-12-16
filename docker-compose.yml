@@ -4,11 +4,9 @@ services:
   retrival-system:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./docker_build/Dockerfile
     volumes: 
-      - ./retrival_system:/retrival_system
-      # - ./retrival_system/data:/data
-      # - ./retrival_system/web_app:/web_app      
+      - ./retrieval_system:/retrieval_system   
     ports:
       - "8080:5000"
     environment:

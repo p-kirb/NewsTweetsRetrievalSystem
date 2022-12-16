@@ -1,0 +1,10 @@
+Relevance and agreement statistics of top 15 results from 5 queries.
+
+Opinion of percentage relevance of results:
+JudgeA    81.333333
+JudgeB    82.666667
+JudgeC    84.000000
+Average   82.66666666666667
+
+Fliess' Kappa: 0.9710375010726852
+Mean Cohen's Kappa: 0.907872662062751
