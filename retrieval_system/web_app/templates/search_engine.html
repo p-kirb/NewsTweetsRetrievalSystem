@@ -12,7 +12,7 @@
 <h1 style="margin-left: 0.5em">Search Engine</h1>
 
 <div style="display: flex; margin-left: 1em;">
-    <div>
+    <div style="position: sticky;">
         <form name="search-engine" action="/search-engine" method="post">
             <b>Please enter the query: </b>
             <p><input type="text" name="query" value='{{query}}' /></p>
@@ -36,6 +36,8 @@
         {% if model == 'vsm' %}
         <button id="rocchio-btn" onclick="rocchio()" style="font-weight:bold">Update Query</button>
         {% endif %}
+        
+        <a href="#" class="top">Scroll Up</a>
     </div>
 
     <div style="flex: 1; margin-left: 1em;" id="search-results">
@@ -61,5 +63,5 @@
         </form>
     </div>
 </div>
-<a href="#" class="top">Scroll Up</a>
+
 {% endblock %}
