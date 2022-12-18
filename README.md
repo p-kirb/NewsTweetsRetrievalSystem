@@ -3,15 +3,26 @@
 #
 
 ## How to run the app
-1. Pull and run docker image
+### 1. Pull the docker image
+- For arm architecture:
 ```
-docker pull dukekush/news_retrieval:latest
+docker pull dukekush/news_retrieval:latest-arm
 ```
-2. Run the container
+- For amd architecture:
 ```
-docker run -dp 8080:5000 dukekush/news_retrieval:latest
+docker pull dukekush/news_retrieval:latest-amd
 ```
-3. Click:
+### 2. Run the container
+
+- For arm architecture:
+```
+docker run -dp 8080:5000 dukekush/news_retrieval:latest-arm
+```
+- For amd architecture:
+```
+docker run -dp 8080:5000 dukekush/news_retrieval:latest-amd
+```
+### 3. Click:
 
 - [http://localhost:8080](http://localhost:8080)
 
