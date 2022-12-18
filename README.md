@@ -4,23 +4,12 @@
 
 ## How to run the app
 ### 1. Pull the docker image
-- For arm architecture:
 ```
-docker pull dukekush/news_retrieval:latest-arm
-```
-- For amd architecture:
-```
-docker pull dukekush/news_retrieval:latest-amd
+docker pull dukekush/news_retrieval:latest
 ```
 ### 2. Run the container
-
-- For arm architecture:
 ```
-docker run -dp 8080:5000 dukekush/news_retrieval:latest-arm
-```
-- For amd architecture:
-```
-docker run -dp 8080:5000 dukekush/news_retrieval:latest-amd
+docker run -dp 8080:5000 dukekush/news_retrieval:latest
 ```
 ### 3. Click:
 
@@ -62,3 +51,7 @@ data
       ├── relevant_queries.csv
       └── rocchio_results.json
 ```
+## Additional info about data
+Dataset are stored via **Git Large File Storage**: https://git-lfs.github.com/
+
+To pull datasets make sure that git lfs is installed.
