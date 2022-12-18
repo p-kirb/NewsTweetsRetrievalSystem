@@ -34,7 +34,7 @@ def search():
     if request.method == 'POST':
         query = request.form['query']
         model = request.form['model']
-        n = int(request.form['n'])
+        n_to_show = int(request.form['n_to_show'])
         processed_query = preprocess_string(query)
         if model == 'vsm':
             results, tf_idf = vector_space_model(
@@ -43,7 +43,7 @@ def search():
                     loaded_data['idf_dict'], 
                     loaded_data['term_id'], 
                     loaded_data['all_tweets'], 
-                    N=n
+                    N=n_to_show
                 )
             loaded_data['results'] = results
             loaded_data['tf_idf'] = tf_idf
@@ -56,7 +56,7 @@ def search():
                     loaded_data['term_id'], 
                     loaded_data['all_tweets'], 
                     k_3=1.5, 
-                    N=n
+                    N=n_to_show
                 )
         elif model == 'mixture':
             results = mixture_model(
@@ -66,25 +66,25 @@ def search():
                     loaded_data['all_tweets'], 
                     loaded_data['cf'], 
                     lam=0.6, 
-                    N=n
+                    N=n_to_show
         )
         elif model == 'lucene':
             vm_env.attachCurrentThread()
-            results = lucene_query(query, n, LUCENE_COMPONENTS_PATH)
+            results = lucene_query(query, n_to_show, LUCENE_COMPONENTS_PATH)
 
             results = results['id']
 
 
-        return render_template('search_engine.html', results=results, query=query, model=model, n=n)
+        return render_template('search_engine.html', results=results, query=query, model=model, n_to_show=n_to_show, n_results=len(results))
     else:
-        return render_template('search_engine.html', results=[], query='', model='bm25', n=10)
+        return render_template('search_engine.html', results=[], query='', model='bm25', n_to_show=10, n_results=0)
 
 
 @app.route('/rocchio', methods=['POST'])
 def rocchio():
     query = request.form['query']
     model = request.form['model']
-    n = int(request.form['n'])
+    n_to_show = int(request.form['n_to_show'])
 
     old_tf_idf = loaded_data['tf_idf']
     results = pd.DataFrame(loaded_data['results'])    
@@ -99,10 +99,10 @@ def rocchio():
 
     tweetVectors = normalize(tf_idf, norm='l2', axis = 1)
     cosine_similarity = tweetVectors.dot(new_query)
-    doc_id = np.argsort(-cosine_similarity)[0:n]
+    doc_id = np.argsort(-cosine_similarity)[0 : n_to_show]
     new_results = loaded_data['all_tweets']["id"][doc_id]
 
-    return render_template('search_engine.html', results=list(new_results), query=query, model=model, n=n)
+    return render_template('search_engine.html', results=list(new_results), query=query, model=model, n_to_show=n_to_show, n_results=len(new_results))
 
 
 if __name__ == '__main__':

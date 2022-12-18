@@ -5,46 +5,52 @@
 
 <script>
     function rocchio() {
-        document.getElementById('rocchio-form').submit();
+        var relevant = document.querySelectorAll('input[name=relevant]:checked');
+        if (relevant.length > 0) {
+            document.getElementById("rocchio-form").submit();
+        } else {
+            alert("Please select some documents first!");
+        }
     }
 </script>
 
 <h1 style="margin-left: 0.5em">Search Engine</h1>
 
 <div style="display: flex; margin-left: 1em;">
-    <div style="position: sticky;">
+    <!-- <div style="position: fixed;"> -->
+    <div>
         <form name="search-engine" action="/search-engine" method="post">
-            <b>Please enter the query: </b>
+
+            <b>Enter the query: </b>
             <p><input type="text" name="query" value='{{query}}' /></p>
 
-            <b>Please check the search model: </b>
+            <b>Check the search model: </b>
             <p><input type="radio" name="model" value="vsm" {% if model=="vsm" %}
                     checked="True" {% endif %}> Vector Space Model</p>
             <p><input type="radio" name="model" value="bm25" {% if model=='bm25' %}
                     checked="True" {% endif %}> OKAPI BM25</p>
             <p><input type="radio" name="model" value="mixture" {% if model=='mixture' %} 
                     checked="True" {% endif %}> Language Based Model</p>
-            <p><input type="radio" name="model" value="lucene" {% if model=='lucene' %} 
+            <p><input type="radio" naf me="model" value="lucene" {% if model=='lucene' %} 
                     checked="True" {% endif %}> Lucene Model</p>
 
-            <b>Please enter number of results to show</b>
-            <p><input type="number" name="n" value={{n}} min="5" max="50"></p>
-
+            <b>Enter number of results to show</b>
+            <p><input type="number" name="n_to_show" value={{n_to_show}} min="5" max="50"></p>
+            
             <p><input type="submit" value="Search" class="search"/></p>
         </form>
 
         {% if model == 'vsm' %}
-        <button id="rocchio-btn" onclick="rocchio()" style="font-weight:bold">Update Query</button>
+            <b>Choose relevant tweets and update</b>
+            <p><button class="update" id="rocchio-btn" onclick="rocchio()" style="font-weight:bold">Update</button></p>
         {% endif %}
-        
-        <a href="#" class="top">Scroll Up</a>
-    </div>
 
+    </div>
     <div style="flex: 1; margin-left: 1em;" id="search-results">
         <form id="rocchio-form" action="/rocchio" method="post">
             <input type="hidden" name="query" value='{{query}}' />
             <input type="hidden" name="model" value='{{model}}' />
-            <input type="hidden" name="n" value='{{n}}' />
+            <input type="hidden" name="n_to_show" value='{{n_to_show}}' />
 
             {% for result in results %}
             <div style="display: flex; align-items: center; justify-content: center; text-align: center;">
@@ -63,5 +69,7 @@
         </form>
     </div>
 </div>
-
+{% if n_results != 0 %}
+    <a href="#" class="top">Scroll Up</a>
+{% endif %}
 {% endblock %}

@@ -32,3 +32,14 @@ p {
   border-radius: 100px;
   white-space:nowrap;
 }
+
+.update {
+  /* visual styling */
+  text-decoration: none;
+  padding: 10px;
+  font-family: sans-serif;
+  color: #fff;
+  background: #000;
+  border-radius: 100px;
+  white-space:nowrap;
+}
