@@ -1,45 +1,81 @@
-.top {
-  place-self:end;
-  position:sticky;
-  bottom:20px;
-  margin-left:15px;
-  margin-top:100vh;
-  
-  /* visual styling */
-  text-decoration: none;
-  padding: 15px;
-  font-family: sans-serif;
-  color: #fff;
-  background: #000;
-  border-radius: 100px;
-  white-space:nowrap;
+* {
+  font-size: 20px;
 }
 
-a {
-  font-size: 20px;
+body {
+  background-color: #F1F3F6 !important;
 }
-p {
-  font-size: 20px;
+
+b {
+  margin-bottom: 0.25em;
+}
+
+.my-container {
+  display: flex;
+  margin-left: 1em !important;
+  margin-top: 1em !important;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+
+.my-card {
+  position: sticky;
+  top: 1em;
+  padding: 2em 2em;
+  min-width: 395px;
+  border-radius: 10px;
+  background: #F1F3F6;
+  box-shadow: 30px 30px 80px rgba(55, 84, 170, 0.1), -30px -30px 80px #FFFFFF, inset 4px 4px 20px rgba(255, 255, 255, 0.5);
+}
+
+.search-input {
+  background-color: #e3edf7;
+  border: none;
+  width: 100%;
+  border-radius: 10px;
+  height: 3em;
+  padding: 1em;
+  transition: all 240ms ease-out;
+}
+
+.search-input:focus {
+  outline: none;
+  background-color: #ffffff;
+}
+
+.number-input {
+  width: auto;
+}
+
+.top {
+  place-self: end;
+  position: sticky;
+  bottom: 20px;
+  margin-left: 15px;
+  margin-top: 100vh;
+  width: auto !important;
+}
+
+.top:hover {
+  background-color: #ffffff;
 }
 
 .search {
   /* visual styling */
   text-decoration: none;
-  padding: 10px;
-  font-family: sans-serif;
-  color: #fff;
-  background: #000;
-  border-radius: 100px;
-  white-space:nowrap;
+  padding: 1em;
+  width: 100%;
+  border-style: none;
+  border-radius: 10px;
+  background: #a9b4c4;
+  box-shadow: 30px 30px 80px rgba(55, 84, 170, 0.1), -30px -30px 80px #FFFFFF, inset 4px 4px 20px rgba(255, 255, 255, 0.5);
+  transition: all 240ms ease-out;
 }
 
-.update {
-  /* visual styling */
-  text-decoration: none;
-  padding: 10px;
-  font-family: sans-serif;
-  color: #fff;
-  background: #000;
-  border-radius: 100px;
-  white-space:nowrap;
+.search:hover {
+  background-color: #ffffff;
 }

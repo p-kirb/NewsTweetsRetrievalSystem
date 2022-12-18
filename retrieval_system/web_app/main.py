@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from functions.search_engine.custom_models import load_data, vector_space_model, BM25, mixture_model
 from functions.preprocessing.helpers import preprocess_string 
 from functions.search_engine.rocchio import rocchio_algorithm
@@ -17,6 +17,7 @@ INPUT_DATAFRAME_PATH = "../data/03_processed_data/processed_data.csv"
 
 # FLASK APP
 app = Flask(__name__, template_folder='templates', static_folder='styles')
+app.secret_key = 'hello there!'
 loaded_data = load_data(MODEL_COMPOMENTS_PATH, INPUT_DATAFRAME_PATH)
 
 
@@ -69,6 +70,10 @@ def search():
                     N=n_to_show
         )
         elif model == 'lucene':
+            if query == '':
+                flash('Please enter a query')
+                return render_template('search_engine.html', results=[], query='', model='lucene', n_to_show=10, n_results=0)
+            
             vm_env.attachCurrentThread()
             results = lucene_query(query, n_to_show, LUCENE_COMPONENTS_PATH)
 

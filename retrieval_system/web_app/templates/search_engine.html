@@ -14,37 +14,56 @@
     }
 </script>
 
-<h1 style="margin-left: 0.5em">Search Engine</h1>
-
-<div style="display: flex; margin-left: 1em;">
-    <!-- <div style="position: fixed;"> -->
+<div class="my-container">
     <div>
-        <form name="search-engine" action="/search-engine" method="post">
+        <div class="my-card">
+            <form name="search-engine" action="/search-engine" method="post">
+                <div class="form-section">
+                    <b>Enter the query: </b>
+                    <div>
+                        <input class="search-input" type="text" id='search' name="query" value='{{query}}' />
+                    </div>
+                </div>
+                <div class="form-section">
+                    <b>Check the search method: </b>
+                    <div>
+                        <input type="radio" id="bm25" name="model" value="bm25" {% if model=='bm25' %} checked="True" {%
+                            endif %}>
+                        <label for="bm25">OKAPI BM25</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="vsm" name="model" value="vsm" {% if model=="vsm" %} checked="True" {%
+                            endif %}>
+                        <label for="vsm">Vector Space Model</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="mixture" name="model" value="mixture" {% if model=='mixture' %}
+                            checked="True" {% endif %}>
+                        <label for="mixture">Language Based Model</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="model" value="lucene" {% if model=='lucene' %} checked="True" {% endif
+                            %}>
+                        <label for="lucene">Lucene Model</label>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <b>Enter number of results to show:</b>
+                    <div>
+                        <input class="search-input number-input" type="number" name="n_to_show" value={{n_to_show}}
+                            min="5" max="50">
+                    </div>
+                </div>
+                <div class="form-section"><input type="submit" value="Search" class="search" /></div>
+            </form>
 
-            <b>Enter the query: </b>
-            <p><input type="text" name="query" value='{{query}}' /></p>
-
-            <b>Check the search model: </b>
-            <p><input type="radio" name="model" value="vsm" {% if model=="vsm" %}
-                    checked="True" {% endif %}> Vector Space Model</p>
-            <p><input type="radio" name="model" value="bm25" {% if model=='bm25' %}
-                    checked="True" {% endif %}> OKAPI BM25</p>
-            <p><input type="radio" name="model" value="mixture" {% if model=='mixture' %} 
-                    checked="True" {% endif %}> Language Based Model</p>
-            <p><input type="radio" naf me="model" value="lucene" {% if model=='lucene' %} 
-                    checked="True" {% endif %}> Lucene Model</p>
-
-            <b>Enter number of results to show</b>
-            <p><input type="number" name="n_to_show" value={{n_to_show}} min="5" max="50"></p>
-            
-            <p><input type="submit" value="Search" class="search"/></p>
-        </form>
-
-        {% if model == 'vsm' %}
-            <b>Choose relevant tweets and update</b>
-            <p><button class="update" id="rocchio-btn" onclick="rocchio()" style="font-weight:bold">Update</button></p>
-        {% endif %}
-
+            {% if model == 'vsm' %}
+            <div class="form-section">
+                <b>Choose relevant tweets and update</b>
+                <button id="rocchio-btn" onclick="rocchio()" class="search">Update</button>
+            </div>
+            {% endif %}
+        </div>
     </div>
     <div style="flex: 1; margin-left: 1em;" id="search-results">
         <form id="rocchio-form" action="/rocchio" method="post">
@@ -70,6 +89,6 @@
     </div>
 </div>
 {% if n_results != 0 %}
-    <a href="#" class="top">Scroll Up</a>
+<button onclick="location.href='#'" class="search top" type="button">Scroll Up</button>
 {% endif %}
 {% endblock %}
